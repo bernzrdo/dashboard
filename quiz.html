@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Quiz</title>
+        <link rel="icon" href="img/quiz.png">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="confetti.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+        <style>
+            
+            #quiz {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                text-align: center;
+                transform: translate(-50%,-50%);
+                width: 80%;
+            }
+            
+            #progress {
+                font-size: 32px;
+                font-weight: bold;
+                opacity: .5;
+            }
+            
+            #pergunta {
+                font-size: 24px;
+            }
+            
+            #win {
+                display: none;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                font-weight: bold;
+                font-size: 80px;
+            }
+            
+            #win span {
+                display: inline-block;
+                animation-name: bounce;
+                animation-duration: 2s;
+                animation-iteration-count: infinite;
+                animation-timing-function: cubic-bezier(.280,.840,.420,1);
+            }
+            
+            .win-1 {
+                animation-delay: .1s;
+            }
+            
+            .win-2 {
+                animation-delay: .2s;
+            }
+            
+            .win-3 {
+                animation-delay: .3s;
+            }
+            
+            .win-4 {
+                animation-delay: .4s;
+            }
+            
+            .win-5 {
+                animation-delay: .5s;
+            }
+            
+            .win-6 {
+                animation-delay: .6s;
+            }
+            
+            .win-7 {
+                animation-delay: .7s;
+            }
+            
+            .win-8 {
+                animation-delay: .8s;
+            }
+            
+            @keyframes bounce {
+                0%   {transform:scale(1,1) translateY(0)}
+                10%  {transform:scale(1.1,.9) translateY(0)}
+                30%  {transform:scale(.9,1.1) translateY(-100px)}
+                50%  {transform:scale(1.05,.95) translateY(0)}
+                57%  {transform:scale(1,1) translateY(-7px)}
+                64%  {transform:scale(1,1) translateY(0)}
+                100% {transform:scale(1,1) translateY(0)}
+            }
+            
+        </style>
+        <script>
+            
+            var perguntas=[
+                {
+                    'pergunta':'Que série de livros tornou-se numa série de filmes com Daniel Radcliffe, Emma Watson e Rupert Grint?',
+                    'respostas':['O Senhor dos Anéis','Harry Potter','The Hunger Games','Twilight'],
+                    'correto':1
+                },
+                {
+                    'pergunta':'Completa o nome desta série de video-jogos: Call of...',
+                    'respostas':['Sin','Doom','Duty','Wall'],
+                    'correto':2
+                },
+                {
+                    'pergunta':'Qual é o nome do primeiro filme dos The Hunger Games?',
+                    'respostas':['The Hunger Games: Os Jogos da Fome','The Hunger Games: Catching Fire','The Hunger Games: Mockingjay – Part 1'],
+                    'correto':0
+                },
+                {
+                    'pergunta':'Quem é o personagem de videogame mais famoso de todos os tempos?',
+                    'respostas':['Solid Snake','Link','Mario','Donkey Kong','Sonic'],
+                    'correto':2
+                },
+                {
+                    'pergunta':'NES significa:',
+                    'respostas':['Never Ending Simulation','New Enterprise System','Not Ever Still','Nintendo Entertainment System'],
+                    'correto':3
+                }
+            ];
+            var round=0;
+            
+            function login(){
+                if(!/[^0-9]/.test($('#user').val())||$('#user').val().length==0){
+                    $('#user').focus();
+                    $('#user').removeClass('error');
+                    setTimeout(function(){
+                        $('#user').addClass('error');
+                    },1);
+                }else{
+                    $('#login').fadeOut();
+                    perguntas.sort(()=>Math.random()-0.5);
+                    pergunta();
+                }
+            }
+            
+            function pergunta(){
+                
+                $('#quiz button').remove();
+                $('#quiz br').remove();
+                $('#progress,#pergunta').after('<br>');
+                
+                if(round!=perguntas.length){
+                    
+                    $('#progress').text((round+1)+'/'+perguntas.length);
+                    
+                    $('#pergunta').text(perguntas[round].pergunta);
+                    
+                    perguntas[round].respostas.forEach(function(r,i){
+                        $('#quiz').append('<br><button i="'+i+'">'+r+'</button>');
+                    })
+                    
+                    $('#quiz').fadeIn();
+                    
+                    round++;
+                    
+                }else{
+                    $('#confetti').show();
+                    $('#win').fadeIn();
+                }
+                
+            }
+            
+            $(function(){
+                
+                $('#quiz').hide();
+                
+                for(i=0;i<150;i++){
+                    $('#confetti').append('<div class="confetti-'+i+'"></div>');
+                }
+                
+                $('#start').click(login);
+                $('#user').keydown(function(e){
+                    if(e.key=='Enter'){
+                        login();
+                    }
+                });
+                
+                $('#quiz').on('click','button',function(){
+                    if(parseInt($(this).attr('i'))==perguntas[round-1].correto){
+                        $('#quiz').fadeOut();
+                        setTimeout(pergunta,400);
+                    }else{
+                        $(this).addClass('error');
+                    }
+                });
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div id="confetti"></div>
+        <div id="menu">
+            <span id="menuBttn">Voltar</span>
+            <div id="bttns">
+                <span id="inscricaoBttn">Inscrição</span>
+                <span id="quizBttn" class="active">Quiz</span>
+                <span id="picgameBttn">PicGame</span>
+                <span id="calculadoraBttn">Calculadora</span>
+            </div>
+        </div>
+        <div id="conteudo">
+            <h1>Quiz</h1>
+            <div id="login">
+                <span>Nome de Utilizador:</span><br>
+                <input id="user" autofocus autocomplete="off" spellcheck="false"><br>
+                <button id="start">Começar</button>
+            </div>
+            <div id="quiz">
+                <span id="progress"></span><br>
+                <span id="pergunta"></span><br>
+            </div>
+            <div id="win"><span class="win-0">V</span><span class="win-1">E</span><span class="win-2">N</span><span class="win-3">C</span><span class="win-4">E</span><span class="win-5">S</span><span class="win-6">T</span><span class="win-7">E</span><span class="win-8">!</span></div>
+        </div>
+    </body>
+</html>

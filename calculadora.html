@@ -1,0 +1,218 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Calculadora</title>
+        <link rel="icon" href="img/calculadora.png">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+        <style>
+            
+            #conteudo {
+                overflow: hidden;
+            }
+            
+            #calculadora {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                text-align: right;
+            }
+            
+            input {
+                background-color: transparent;
+                color: #fff;
+                font-family: 'Raleway', sans-serif;
+                border: 0;
+                text-align: right;
+                font-size: 48px;
+                width: 300px;
+            }
+            
+            input:focus {
+                outline: none;
+            }
+            
+            #operacao,#resultado {
+                cursor: pointer;
+                transition: all .3s;
+            }
+            
+            #operacao {
+                display: inline-block;
+                font-size: 48px;
+                width: 16px;
+            }
+            
+            #operacao:hover {
+                transform: scale(1.3);
+            }
+            
+            #operacao:active {
+                transform: scale(.9);
+            }
+            
+            #line {
+                width: 100%;
+                height: 2px;
+                background-color: #fff;
+            }
+            
+            #copy {
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translate(-50%,100%);
+                background-color: #333;
+                padding: 10px 50px;
+                border-radius: 5000px;
+                transition: all .5s;
+                box-shadow: 0 15px 30px rgba(0,0,0,.25);
+            }
+            
+            #copy.on {
+                bottom: 100px;
+                transform: translate(-50%,0);
+            }
+            
+            #limpar img {
+                height: 32px;
+            }
+            
+        </style>
+        <script>
+            function calcular(){
+                
+                if($('#n1').val().length==0){
+                    var n1=0;
+                }else{
+                    var n1=parseFloat($('#n1').val().replace(',','.'));
+                }
+                
+                if($('#n2').val().length==0){
+                    var n2=0;
+                }else{
+                    var n2=parseFloat($('#n2').val().replace(',','.'));
+                }
+                
+                switch($('#operacao').attr('operacao')){
+                    case 'soma':
+                        var r=n1+n2;
+                        break;
+                    case 'subtracao':
+                        var r=n1-n2;
+                        break;
+                    case 'multiplicacao':
+                        var r=n1*n2;
+                        break;
+                    case 'divisao':
+                        var r=n1/n2;
+                }
+                
+                if(r==NaN||r==0){
+                    $('#resultado').val('');
+                }else{
+                    $('#resultado').val(r.toString().replace('.',','));
+                }
+                
+            }
+            $(function(){
+                
+                $('#operacao').click(function(){
+                    switch($(this).attr('operacao')){
+                        case 'soma':
+                            $(this).attr('operacao','subtracao');
+                            $(this).html('-');
+                            break;
+                        case 'subtracao':
+                            $(this).attr('operacao','multiplicacao');
+                            $(this).html('&times;');
+                            break;
+                        case 'multiplicacao':
+                            $(this).attr('operacao','divisao');
+                            $(this).html('&divide;');
+                            break;
+                        case 'divisao':
+                            $(this).attr('operacao','soma');
+                            $(this).html('+');
+                    }
+                    calcular();
+                });
+                
+                $('#n1,#n2').on('input',function(){
+                    var n=$(this).val();
+                    n=n.replace('.',',').replace(/[^0-9,]/,'');
+                    while(n.replace(/[^,]/g,'').length>1){
+                        n=n.split('').reverse().join('').replace(',','').split('').reverse().join('');
+                    }
+                    if(n=='0'){
+                        n='';
+                    }
+                    $(this).val(n);
+                    calcular();
+                });
+                
+                $('#n1').keydown(function(e){
+                    if(e.key=='Enter'){
+                        $('#n2').focus();
+                    }
+                });
+                
+                $('#n2').keydown(function(e){
+                    if(e.key=='Enter'){
+                        $('#n1').focus();
+                    }
+                });
+                
+                var alertTimeout;
+                $('#resultado').focus(function(){
+                    clearInterval(alertTimeout);
+                    if($(this).val().length==0){
+                        $(this).val(0);
+                    }
+                    this.select();
+                    document.execCommand('copy');
+                    $('#copy').addClass('on');
+                    $(this).blur();
+                    if($(this).val()==0){
+                        $('#resultado').val('');
+                    }
+                    alertTimeout=setTimeout(function(){
+                        $('#copy').removeClass('on');
+                    },3000);
+                });
+                
+                $('#limpar').click(function(){
+                    $('#n1,#n2,#resultado').val('');
+                    $('#n1').focus();
+                });
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div id="menu">
+            <span id="menuBttn">Voltar</span>
+            <div id="bttns">
+                <span id="inscricaoBttn">Inscrição</span>
+                <span id="quizBttn">Quiz</span>
+                <span id="picgameBttn">PicGame</span>
+                <span id="calculadoraBttn" class="active">Calculadora</span>
+            </div>
+        </div>
+        <div id="conteudo">
+            <h1>Calculadora</h1>
+            <div id="calculadora">
+                <input id="n1" autofocus placeholder="0"><br>
+                <span id="operacao" operacao="soma">+</span>
+                <input id="n2" placeholder="0">
+                <div id="line"></div>
+                <input id="resultado" placeholder="0"><br>
+                <button id="limpar"><img src="img/apagar.png" draggable="false"></button>
+            </div>
+            <div id="copy">Resultado copiado com sucesso!</div>
+        </div>
+    </body>
+</html>

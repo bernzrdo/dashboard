@@ -1,0 +1,166 @@
+
+body {
+    margin: 0;
+    background-color: #111;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    user-select: none;
+    overflow: hidden;
+}
+
+*:focus {
+    outline: none;
+}
+
+button {
+    font-family: 'Raleway', sans-serif;
+    font-size: 24px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all .5s;
+}
+
+button:hover {
+    opacity: .5;
+    letter-spacing: 5px;
+}
+
+input {
+    background-color: transparent;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    border: 0;
+    font-size: 32px;
+    border-bottom: 2px solid #222;
+    transition: border-botton .5s;
+}
+
+input.error {
+    animation: error .4s linear;
+    border-bottom: 2px solid #f00;
+}
+
+button.error {
+    animation: error .4s linear;
+    color: #f00;
+}
+
+@keyframes error {
+    0%   {transform: translate(30px);}
+    20%  {transform: translate(-30px);}
+    40%  {transform: translate(15px);}
+    60%  {transform: translate(-15px);}
+    80%  {transform: translate(8px);}
+}
+
+/* --- MENU --- */
+
+#menu {
+    position: fixed;
+    background-color: #222;
+    padding: 0 15px;
+    height: 100%;
+    width: 24px;
+    overflow: hidden;
+    transition: all .5s;
+    z-index: 1;
+}
+
+#menu.open {
+    width: 275px;
+}
+
+#menu span {
+    display: block;
+    font-size: 24px;
+    padding-left: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: all .5s;
+}
+
+#menu span:hover {
+    opacity: .5;
+    letter-spacing: 5px;
+}
+
+#menu span.active {
+    opacity: .5;
+}
+
+#menuBttn {
+    background-image: url(img/menu.png);
+}
+
+#menu.open #menuBttn {
+    background-image: url(img/voltar.png);
+}
+
+#bttns {
+    position: absolute;
+    bottom: 0;
+}
+
+#inscricaoBttn {
+    background-image: url(img/inscricao.png);
+}
+
+#quizBttn {
+    background-image: url(img/quiz.png);
+}
+
+#picgameBttn {
+    background-image: url(img/picgame.png);
+}
+
+#calculadoraBttn {
+    background-image: url(img/calculadora.png);
+}
+
+/* --- CONTEUDO --- */
+
+#conteudo {
+    position: absolute;
+    height: calc(100% - 30px);
+    width: calc(100% - 84px);
+    right: 0;
+    padding: 15px;
+}
+
+h1 {
+    margin: 0;
+    text-transform: uppercase;
+    font-size: 48px;
+}
+
+/* --- LOGIN --- */
+
+#login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+
+#login span {
+    text-transform: uppercase;
+    opacity: .5;
+    font-weight: bold;
+}
+
+#login input {
+    text-align: center;
+}
+
+#login button {
+    margin-top: 15px;
+}

@@ -1,0 +1,356 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Inscrição</title>
+        <link rel="icon" href="img/inscricao.png">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+        <style>
+            
+            #content,body {
+                overflow: auto;
+            }
+            
+            h1 {
+                position: fixed;
+            }
+            
+            input {
+                width: 400px;
+            }
+            
+            form {
+                position: absolute;
+                top: 78px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            form div {
+                position: relative;
+                margin-bottom: 25px;
+            }
+            
+            .lbl {
+                opacity: .5;
+                font-size: 24px;
+                position: absolute;
+                pointer-events: none;
+                left: 0;
+                top: 10px;
+                transition: all .2s;
+            }
+            
+            .lbl.small {
+                top: -15px;
+                font-size: 14px;
+                color: #fff;
+            }
+            
+            .checkbox {
+                position: relative;
+                display: block;
+                cursor: pointer;
+                font-size: 24px;
+            }
+            
+            .checkbox input,.checkbox svg {
+                width: 24px;
+                height: 24px;
+                display: inline-block;
+            }
+            
+            .checkbox input {
+                -webkit-appearance: none;
+                position: relative;
+                outline: none;
+                background: #fff;
+                border: none;
+                margin: 0;
+                padding: 0;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: box-shadow .3s;
+                box-shadow: inset 0 0 0 var(--s, 1px) var(--b, #333);
+            }
+            
+            .checkbox input:hover {
+                --s: 2px;
+                --b: #333;
+            }
+            
+            .checkbox input:checked {
+                --b: #222;
+            }
+            
+            .checkbox svg {
+                pointer-events: none;
+                fill: none;
+                stroke-width: 2px;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke: #fff;
+                position: absolute;
+                top: -9px;
+                left: 0;
+                width: 24px;
+                height: 24px;
+                transform: translateY(10px) scale(var(--scale, 1)) translateZ(0);
+            }
+            
+            .checkbox input:checked {
+                --s: 12px;
+            }
+            
+            .checkbox input:checked + svg {
+                animation: bounce .4s linear forwards .2s;
+            }
+            
+            .checkbox svg {
+                --scale: 0;
+            }
+            
+            @keyframes bounce {
+                50% {transform: translateY(10px) scale(1.2)}
+                75% {transform: translateY(10px) scale(0.9)}
+                100% {transform: translateY(10px) scale(1)}
+            }
+            
+            .radio {
+                margin: 16px 0;
+                display: block;
+                cursor: pointer;
+                font-size: 24px;
+            }
+            
+            .radio input {
+                display: none;
+            }
+            
+            .radio input + span {
+                line-height: 22px;
+                height: 22px;
+                padding-left: 22px;
+                display: block;
+                position: relative;
+            }
+            
+            .radio input + span:not(:empty) {
+                padding-left: 30px;
+            }
+            
+            .radio input + span:before, .radio input + span:after {
+                content: '';
+                width: 22px;
+                height: 22px;
+                display: block;
+                border-radius: 50%;
+                left: 0;
+                top: 0;
+                position: absolute;
+            }
+            
+            .radio input + span:before {
+                background: #333;
+                transition: background 0.2s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2);
+            }
+            
+            .radio input + span:after {
+                background: #fff;
+                transform: scale(0.78);
+                transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+            }
+            
+            .radio input:checked + span:before {
+                transform: scale(1.04);
+                background: #222;
+            }
+            
+            .radio input:checked + span:after {
+                transform: scale(0.4);
+                transition: transform .3s ease;
+            }
+            
+            .radio:hover input + span:before {
+                transform: scale(0.92);
+            }
+            
+            .radio:hover input + span:after {
+                transform: scale(0.74);
+            }
+            
+            .radio:hover input:checked + span:after {
+                transform: scale(0.4);
+            }
+            
+            select {
+                width: 400px;
+                border: 0;
+                background-color: transparent;
+                font-size: 24px;
+                font-weight: bold;
+                color: #fff;
+                font-family: 'Raleway', sans-serif;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+            
+            option {
+                background-color: #111;
+                text-transform: uppercase;
+                font-weight: bold;
+            }
+            
+            textarea {
+                width: 400px;
+                height: 100px;
+                background-color: transparent;
+                color: #fff;
+                font-size: 24px;
+                font-family: 'Raleway', sans-serif;
+                border: 0;
+                border-bottom: 2px solid #222;
+                resize: vertical;
+            }
+            
+            .errormsg {
+                display: block;
+                text-align: center;
+                margin-top: 5px;
+                color: #f00;
+            }
+            
+        </style>
+        <script>
+            $(function(){
+                
+                $('.errormsg').hide();
+                
+                $('input:not(.off)').focus(function(){
+                    $(this).next().addClass('small');
+                });
+                
+                $('input:not(.off)').blur(function(){
+                    if($(this).val().length==0){
+                        $(this).next().removeClass('small');
+                    }
+                });
+                
+                $('#foto').click(function(){
+                    $('[type=file]').click();
+                });
+                
+                $('[type=submit]').click(function(){
+                    if(!/[^0-9]/.test($('[name=utilizador]').val())){
+                        $('[type=submit]').click()
+                    }else{
+                        $('.errormsg').slideDown();
+                        $('[name=utilizador]').focus();
+                    }
+                });
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div id="menu">
+            <span id="menuBttn">Voltar</span>
+            <div id="bttns">
+                <span id="inscricaoBttn" class="active">Inscrição</span>
+                <span id="quizBttn">Quiz</span>
+                <span id="picgameBttn">PicGame</span>
+                <span id="calculadoraBttn">Calculadora</span>
+            </div>
+        </div>
+        <div id="conteudo">
+            <h1>Inscrição</h1><br>
+            <form>
+                <div>
+                    <input name="utilizador" required type="text" spellcheck="false" autocomplete="username" autofocus pattern="(?!^\d+$)^.+$">
+                    <label class="lbl small">Utilizador*</label>
+                    <span class="errormsg">Não pode ser apenas números!</span>
+                </div>
+                <div>
+                    <input name="password" type="password" min="8" required>
+                    <label class="lbl">Password*</label>
+                </div>
+                <div>
+                    <input name="nome_completo" required type="text" autocomplete="name">
+                    <label class="lbl">Nome Completo*</label>
+                </div>
+                <div>
+                    <input name="codigo_postal" type="text" autocomplete="postal-code" pattern="[0-9]{4}-[0-9]{3}" title="1234-567">
+                    <label class="lbl">Código Postal</label>
+                </div>
+                <div>
+                    <input name="localidade" type="text">
+                    <label class="lbl">Localidade</label>
+                </div>
+                <div>
+                    <input class="off" name="data_de_nascimento" type="date" autocomplete="bday">
+                    <label class="lbl small">Data de Nascimento</label>
+                </div>
+                <div>
+                    <input name="email" required type="email" autocomplete="email">
+                    <label class="lbl">E-mail*</label>
+                </div>
+                <div>
+                    <input name="tel" required type="tel" autocomplete="tel">
+                    <label class="lbl">Telefone/Telemóvel*</label>
+                </div>
+                <div style="margin-top: 35px;">
+                    <label class="radio"><input name="sexo" type="radio" required><span>Feminino</span></label>
+                    <label class="radio"><input name="sexo" type="radio"><span>Masculino</span></label>
+                    <label class="lbl small" style="top:-25px">Sexo*</label>
+                </div>
+                <div style="margin-top: 35px;">
+                    <label class="checkbox">
+                        <input name="formacao" type="checkbox">
+                        <svg viewBox="0 0 21 21"><polyline points="5 10.75 8.5 14.25 16 6"></polyline></svg>
+                        <span>9º ano</span>
+                    </label>
+                    <label class="checkbox">
+                        <input name="formacao" type="checkbox">
+                        <svg viewBox="0 0 21 21"><polyline points="5 10.75 8.5 14.25 16 6"></polyline></svg>
+                        <span>12º ano</span>
+                    </label>
+                    <label class="checkbox">
+                        <input name="formacao" type="checkbox">
+                        <svg viewBox="0 0 21 21"><polyline points="5 10.75 8.5 14.25 16 6"></polyline></svg>
+                        <span>Curso Profissional</span>
+                    </label>
+                    <label class="checkbox">
+                        <input name="formacao" type="checkbox">
+                        <svg viewBox="0 0 21 21"><polyline points="5 10.75 8.5 14.25 16 6"></polyline></svg>
+                        <span>Bacharelato</span>
+                    </label>
+                    <label class="checkbox">
+                        <input name="formacao" type="checkbox">
+                        <svg viewBox="0 0 21 21"><polyline points="5 10.75 8.5 14.25 16 6"></polyline></svg>
+                        <span>Licenciatura</span>
+                    </label>
+                    <label class="lbl small" style="top:-25px">Formação</label>
+                </div>
+                <div>
+                    <select name="preferencia_de_contacto">
+                        <option value="email">E-mail</option>
+                        <option value="tel">Telefone</option>
+                        <option value="sms">SMS</option>
+                    </select>
+                    <label class="lbl small">Desejo ser contactado por:</label>
+                </div>
+                <div>
+                    <label class="lbl small">Foto:</label>
+                    <button id="foto" type="button">Escolher foto</button><input name="foto" type="file" accept="image/*" hidden>
+                </div>
+                <div>
+                    <label class="lbl small">Comentário Livre:</label>
+                    <textarea></textarea>
+                </div>
+                <button id="enviar" type="submit">Enviar</button><button  hidden></button><button type="reset" style="float: right;">Limpar</button>
+            </form>
+        </div>
+    </body>
+</html>

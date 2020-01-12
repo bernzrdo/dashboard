@@ -1,0 +1,254 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>PicGame</title>
+        <link rel="icon" href="img/picgame.png">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="confetti.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+        <style>
+            
+            #cover {
+                position: absolute;
+                left: 15px;
+                height: calc(100% - 86px);
+                border-radius: 5px;
+                box-shadow: 0 15px 30px rgba(0,0,0,.25);
+            }
+            
+            #game {
+                position: absolute;
+                top: 50%;
+                left: calc((100vh - 86px)*5/8 + 30px);
+                width: calc(100% - ((100vh - 86px)*5/8) - 30px);
+                text-align: center;
+                transform: translateY(-50%);
+            }
+            
+            #progress {
+                font-size: 32px;
+                font-weight: bold;
+                opacity: .5;
+            }
+            
+            #game input {
+                font-family: 'Raleway', sans-serif;
+                font-size: 64px;
+                width: 68px;
+                margin: 0 5px;
+                text-align: center;
+            }
+            
+            #game input.space {
+                margin-right: 68px;
+            }
+            
+            #win {
+                display: none;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                font-weight: bold;
+                font-size: 80px;
+            }
+            
+            #win span {
+                display: inline-block;
+                animation-name: bounce;
+                animation-duration: 2s;
+                animation-iteration-count: infinite;
+                animation-timing-function: cubic-bezier(.280,.840,.420,1);
+            }
+            
+            .win-1 {
+                animation-delay: .1s;
+            }
+            
+            .win-2 {
+                animation-delay: .2s;
+            }
+            
+            .win-3 {
+                animation-delay: .3s;
+            }
+            
+            .win-4 {
+                animation-delay: .4s;
+            }
+            
+            .win-5 {
+                animation-delay: .5s;
+            }
+            
+            .win-6 {
+                animation-delay: .6s;
+            }
+            
+            .win-7 {
+                animation-delay: .7s;
+            }
+            
+            .win-8 {
+                animation-delay: .8s;
+            }
+            
+            @keyframes bounce {
+                0%   {transform:scale(1,1) translateY(0)}
+                10%  {transform:scale(1.1,.9) translateY(0)}
+                30%  {transform:scale(.9,1.1) translateY(-100px)}
+                50%  {transform:scale(1.05,.95) translateY(0)}
+                57%  {transform:scale(1,1) translateY(-7px)}
+                64%  {transform:scale(1,1) translateY(0)}
+                100% {transform:scale(1,1) translateY(0)}
+            }
+            
+        </style>
+        <script>
+            
+            var filmes=['a bela e o monstro','avatar','batman','endgame','ghostbusters','harry potter','it','madagascar','o rei leão','shrek','star wars','titanic','toy story','up','wall e'],
+                round=0,
+                nome;
+            
+            function login(){
+                if(!/[^0-9]/.test($('#user').val())||$('#user').val().length==0){
+                    $('#user').focus();
+                    $('#user').removeClass('error');
+                    setTimeout(function(){
+                        $('#user').addClass('error');
+                    },1);
+                }else{
+                    $('#login').fadeOut();
+                    filmes.sort(()=>Math.random()-0.5);
+                    filme();
+                }
+            }
+            
+            function filme(){
+                
+                $('#game input').remove();
+                
+                if(round<filmes.length){
+                    $('#progress').text((round+1)+'/'+filmes.length);
+                    
+                    nome=filmes[round];
+                    
+                    $('#cover').attr('src','img/'+nome.replace(/ /g,'-')+'.jpg');
+                    
+                    nome=nome.split('');
+                    nome.forEach(function(l,i){
+                        if(l!=' '){
+                            if(nome[i+1]==' '){
+                                $('#game').append('<input class="space">');
+                            }else{
+                                $('#game').append('<input>');
+                            }
+                        }
+                    });
+                    
+                    nome=nome.join('').toUpperCase();
+                    
+                    $('#game').fadeIn();
+                    $('#cover').fadeIn();
+                    
+                    $('#game input:first').focus();
+                    
+                    round++;
+                    
+                }else{
+                    $('#confetti').show();
+                    $('#win').fadeIn();
+                }
+                
+            }
+            
+            function check(){
+                var input=[];
+                $('#game input').each(function(){
+                    input.push($(this).val());
+                });
+                console.log(input.join(''));
+                if(input.join('')==nome.replace(/ /g,'')){
+                    $('#game').fadeOut();
+                    $('#cover').fadeOut();
+                    setTimeout(filme,400);
+                };
+                
+            }
+            
+            $(function(){
+                
+                $('#game').hide();
+                $('#cover').hide();
+                
+                for(i=0;i<150;i++){
+                    $('#confetti').append('<div class="confetti-'+i+'"></div>');
+                }
+                
+                $('#start').click(login);
+                $('#user').keydown(function(e){
+                    if(e.key=='Enter'){
+                        login();
+                    }
+                });
+                
+                $('#game').on('input','input',function(){
+                    $(this).val($(this).val().replace(' ',''));
+                    $(this).val($(this).val().toUpperCase());
+                    if($(this).val().length==1){
+                        if($(this).next().is('input')){
+                            $(this).next().focus();
+                        }
+                    }
+                    if($(this).val().length>1){
+                        $(this).val($(this).val().split('')[0])
+                    }
+                    check();
+                });
+                
+                $('#game').on('keydown','input',function(e){
+                    if(e.key=='Backspace'){
+                        if($(this).val().length==1){
+                            $(this).val('');
+                        }else if($(this).prev().is('input')){
+                            $(this).prev().val('');
+                            $(this).prev().focus();
+                        }
+                    }
+                });
+                
+                $('#game').on('focus','input',function(){
+                    this.select();
+                });
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div id="confetti"></div>
+        <div id="menu">
+            <span id="menuBttn">Voltar</span>
+            <div id="bttns">
+                <span id="inscricaoBttn">Inscrição</span>
+                <span id="quizBttn">Quiz</span>
+                <span id="picgameBttn" class="active">PicGame</span>
+                <span id="calculadoraBttn">Calculadora</span>
+            </div>
+        </div>
+        <div id="conteudo">
+            <h1>PicGame</h1>
+            <div id="login">
+                <span>Nome de Utilizador:</span><br>
+                <input id="user" autofocus autocomplete="off" spellcheck="false"><br>
+                <button id="start">Começar</button>
+            </div>
+            <img id="cover">
+            <div id="game">
+                <span id="progress"></span><br>
+            </div>
+            <div id="win"><span class="win-0">V</span><span class="win-1">E</span><span class="win-2">N</span><span class="win-3">C</span><span class="win-4">E</span><span class="win-5">S</span><span class="win-6">T</span><span class="win-7">E</span><span class="win-8">!</span></div>
+        </div>
+    </body>
+</html>
