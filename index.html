@@ -215,13 +215,6 @@
                 resize: vertical;
             }
             
-            .errormsg {
-                display: block;
-                text-align: center;
-                margin-top: 5px;
-                color: #f00;
-            }
-            
         </style>
         <script>
             $(function(){
@@ -240,15 +233,6 @@
                 
                 $('#foto').click(function(){
                     $('[type=file]').click();
-                });
-                
-                $('[type=submit]').click(function(){
-                    if(!/[^0-9]/.test($('[name=utilizador]').val())){
-                        $('[type=submit]').click()
-                    }else{
-                        $('.errormsg').slideDown();
-                        $('[name=utilizador]').focus();
-                    }
                 });
                 
             });
@@ -270,7 +254,6 @@
                 <div>
                     <input name="utilizador" required type="text" spellcheck="false" autocomplete="username" autofocus pattern="(?!^\d+$)^.+$">
                     <label class="lbl small">Utilizador*</label>
-                    <span class="errormsg">Não pode ser apenas números!</span>
                 </div>
                 <div>
                     <input name="password" type="password" min="8" required>
@@ -349,7 +332,7 @@
                     <label class="lbl small">Comentário Livre:</label>
                     <textarea></textarea>
                 </div>
-                <button id="enviar" type="submit">Enviar</button><button  hidden></button><button type="reset" style="float: right;">Limpar</button>
+                <button id="enviar" type="submit">Enviar</button><button type="reset" style="float: right;">Limpar</button>
             </form>
         </div>
     </body>
